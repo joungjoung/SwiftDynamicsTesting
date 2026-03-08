@@ -19,24 +19,39 @@ output = number can not be negative
 
 class Solution:
     
-    def factorial(self, n: int) -> int:
-        if n < 0:
-            raise ValueError("n ต้องเป็นจำนวนเต็มไม่ติดลบ")
+    def max_num_power_5(self, n: int) -> int:
+        """
+        หาจำนวนของเลขที่เป็นกำลังของ 5 ที่น้อยที่สุดที่น้อยกว่าหรือเท่ากับ n
+        """
+
+        count = 0
+        power_of_5 = 5
+        while power_of_5 <= n:
+            count += 1
+            power_of_5 *= 5
+        return count
     
-        result = 1
-        for i in range(2, n + 1):
-            result *= i
-        return result
+    def components_5n_power_k(self, n: int, k: int) -> int:
+        """
+        หาจำนวนครั้งที่ 5^k เป็นตัวประกอบในเลข n! โดยการนับจำนวนเลขที่หารด้วย 5^k ได้ลงตัว
+        """
+
+        return n // (5 ** k)
     
     def find_tailing_zeroes(self, number: int) -> int | str:
-        if number < 0:
-            return "number can not be negative"
-        
-        factorial_value = self.factorial(number)
+        """
+        หาจำนวนเลข 0 ที่อยู่ติดกันหลังสุดของค่า factorial
+        โดย
+         1. หาจำนวนที่เป็นเลขกำลังของ 5 ที่น้อยที่สุดที่น้อยกว่าหรือเท่ากับ number
+         2. วน loop จาก 1 ถึงจำนวนที่เป็นเลขกำลังของ 5 ที่น้อยที่สุดที่น้อยกว่าหรือเท่ากับ number เพื่อหาจำนวนครั้งที่ 5^k เป็นตัวประกอบในเลข number! โดยการนับจำนวนเลขที่หารด้วย 5^k ได้ลงตัว
+         3. นำผลลัพธ์ที่ได้จากข้อ 2 มารวมกันเพื่อหาจำนวนเลข 0 ที่อยู่ติดกันหลังสุดของค่า factorial
+        """
+    
+        loop_count = self.max_num_power_5(number)
         count = 0
-        while factorial_value % 10 == 0 and factorial_value != 0:
-            count += 1
-            factorial_value //= 10
+        for k in range(1, loop_count + 1):
+            count += self.components_5n_power_k(number, k)
+    
         return count
 
 
